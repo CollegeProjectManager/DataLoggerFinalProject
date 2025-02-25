@@ -1,0 +1,24 @@
+function doGet(e) {
+  // Check if all parameters exist
+  if (!e.parameter.hasOwnProperty("temp") || 
+      !e.parameter.hasOwnProperty("motorTemp") || 
+      !e.parameter.hasOwnProperty("accident") || 
+      !e.parameter.hasOwnProperty("collision") || 
+      !e.parameter.hasOwnProperty("speed")) {
+    return ContentService.createTextOutput("Missing parameters").setMimeType(ContentService.MimeType.TEXT);
+  }
+
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet(); // Use active sheet
+
+  var timestamp = new Date();
+  var batteryTemp = e.parameter.temp;
+  var motorTemp = e.parameter.motorTemp;
+  var accident = e.parameter.accident.toLowerCase() === "true" ? "Yes" : "No";
+  var collision = e.parameter.collision === "0" ? "Yes" : "No"; // Assuming "0" = Yes, "1" = No
+  var speed = e.parameter.speed;
+
+  // Append data to the sheet
+  sheet.appendRow([timestamp, batteryTemp, motorTemp, accident, collision, speed]);
+
+  return ContentService.createTextOutput("Data logged successfully").setMimeType(ContentService.MimeType.TEXT);
+}
